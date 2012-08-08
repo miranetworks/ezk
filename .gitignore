@@ -10,3 +10,4 @@ logs/
 zook*
 *gauss*
 .eunit/
+*.swp
