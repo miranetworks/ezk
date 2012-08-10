@@ -41,7 +41,7 @@
 -export([start_connection/0, start_connection/1, start_connection/2, end_connection/2]).
 -export([add_monitors/2, get_connections/0]).
 
--export([set_connection_monitor/2, start_connection_linked/0, start_connection_linked/1]).
+-export([set_connection_monitor/2]).
 
 -include_lib("../include/ezk.hrl").
 
@@ -71,20 +71,6 @@ start_connection(Servers) ->
     gen_server:call(?SERVER, {start_connection, Servers, []}).
 start_connection(Servers, MonitorPIds) ->
     gen_server:call(?SERVER, {start_connection, Servers, MonitorPIds}).
-
-start_connection_linked() ->
-    Res = gen_server:call(?SERVER, {start_connection, [], []}),
-    link_connection(Res).
-
-start_connection_linked(Servers) ->
-    Res = gen_server:call(?SERVER, {start_connection, Servers, []}),
-    link_connection(Res).
-
-link_connection({ok,Pid}) ->
-    link(Pid),
-    {ok, Pid};
-link_connection(Other) ->
-    Other.
 
 %% ends the connection symbolized by the PId. Returns ok or an error message
 end_connection(ConnectionPId, Reason) ->
