@@ -73,11 +73,11 @@ start_connection(Servers, MonitorPIds) ->
     gen_server:call(?SERVER, {start_connection, Servers, MonitorPIds}).
 
 start_connection_linked() ->
-    Res = gen_sever:call(?SERVER, {start_connection, [], []}),
+    Res = gen_server:call(?SERVER, {start_connection, [], []}),
     link_connection(Res).
 
 start_connection_linked(Servers) ->
-    Res = gen_sever:call(?SERVER, {start_connection, Servers, []}),
+    Res = gen_server:call(?SERVER, {start_connection, Servers, []}),
     link_connection(Res).
 
 link_connection({ok,Pid}) ->
