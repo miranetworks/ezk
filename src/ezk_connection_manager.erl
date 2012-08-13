@@ -46,7 +46,7 @@
 -include_lib("../include/ezk.hrl").
 
 -define(SERVER, ?MODULE).
--define(NUMBER_CONNECTION_TRYS, 100).
+-define(NUMBER_CONNECTION_TRYS, 1).    % Was 100
 
 %% starts the server. normally called by the supervisor of the ezk application.
 start_link(Args) ->
