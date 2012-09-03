@@ -70,6 +70,12 @@
 -define(SERVER, ?MODULE). 
 -define(HEARTBEATTIME, 10000).
 
+-ifdef(ZK34).
+-define(PARSE_REPLY(R),  <<RealTimeout:64, SessionId:64, 16:32, _Hash:128, _Null:8>> = R).
+-else.
+-define(PARSE_REPLY(R),  <<RealTimeout:64, SessionId:64, 16:32, _Hash:128>> = R).
+-endif.
+	
 start(Args) ->
     ?LOG(1,"Connection: Start link called with Args: ~w",[Args]),
     gen_server:start(?MODULE, Args , []).
@@ -477,8 +483,9 @@ establish_connection(Ip, Port, WantedTimeout, HeartBeatTime) ->
 	    receive
 		{tcp,Socket,Reply} ->
 		    ?LOG(3, "Connection: Handshake Reply there"),  
-		    <<RealTimeout:64, SessionId:64, 16:32, _Hash:128>> = Reply,
-		    Watchtable    = ets:new(watchtable, [duplicate_bag, private]),
+                    %% <<RealTimeout:64, SessionId:64, 16:32, _Hash:128>> = Reply,
+                    ?PARSE_REPLY(Reply),
+                    Watchtable    = ets:new(watchtable, [duplicate_bag, private]),
 		    InitialState  = #cstate{  
 		      socket = Socket, ip = Ip, 
 		      port = Port, timeout = RealTimeout,
