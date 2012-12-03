@@ -471,9 +471,9 @@ send_watch_events_and_erase_receivers(Table, Receivers, Path, Typ, SyncCon) ->
 establish_connection(Ip, Port, WantedTimeout, HeartBeatTime) ->
     ?LOG(1, "Connection: Server starting"),
     ?LOG(3, "Connection: IP: ~s , Port: ~w, Timeout: ~w.",[Ip,Port,WantedTimeout]),  
-    case  gen_tcp:connect(Ip,Port,[binary,{packet,4}]) of
+    case  gen_tcp:connect(Ip,Port,[binary,{packet,4}],2000) of
 	{ok, Socket} ->
-	    ?LOG(3, "Connection: Socket open"),    
+            ?LOG(3, "Connection: Socket open"),    
 	    HandshakePacket = <<0:64, WantedTimeout:64, 0:64, 16:64, 0:128>>,
 	    ?LOG(3, "Connection: Handshake build"),    
 	    ok = gen_tcp:send(Socket, HandshakePacket),
@@ -494,11 +494,16 @@ establish_connection(Ip, Port, WantedTimeout, HeartBeatTime) ->
 		    ?LOG(3, "Connection: Initial state build"),         
 		    ok = inet:setopts(Socket,[{active,once}]),
 		    ?LOG(3, "Connection: Startup complete",[]),
-		    ?LOG(3, "Connection: Initial State : ~w",[InitialState])
-	    end,
-	    erlang:send_after(HeartBeatTime, self(), heartbeat),
-	    ?LOG(3,"Connection established with server ~s, ~w ~n",[Ip, Port]),
-	    {ok, InitialState};
+		    ?LOG(3, "Connection: Initial State : ~w",[InitialState]),
+	    % end,
+	            erlang:send_after(HeartBeatTime, self(), heartbeat),
+	            ?LOG(3,"Connection established with server ~s, ~w ~n",[Ip, Port]),
+	            {ok, InitialState}
+            after
+                1000 ->
+                    gen_tcp:close(Socket),
+                    error
+            end;
 	_Else ->
 	    error
     end.

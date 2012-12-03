@@ -24,7 +24,7 @@
 
 -module(ezk_log).
 -export([put/3, put/2]).
--define(LEVEL,0).
+-define(LEVEL,3).
 %% 0: nothing
 %% 1: important things
 %% 2: even more things
@@ -34,7 +34,7 @@
 put(NeededLevel, Message, Parameter) ->
     if
        NeededLevel =< ?LEVEL ->
-	    %%error_logger:info_report([{message, Message}, {parameter, Parameter}]),
+	    error_logger:info_report([{message, Message}, {parameter, Parameter}]),
 	    io:format(("Logger: " ++ Message++"~n"), Parameter);
        true -> {}
     end.
@@ -42,6 +42,7 @@ put(NeededLevel, Message, Parameter) ->
 put(NeededLevel, Message) ->
     if
        NeededLevel =< ?LEVEL ->
+	    error_logger:info_report([{message, Message}]),
 	    io:format(("Logger: " ++ Message++"~n"));
        true -> {}
     end.
