@@ -102,12 +102,12 @@ die(ConnectionPId, Reason) ->
 %% Returns {error, auth_failed} if server rejected auth
 %% Returns {error, unknown, ErrorCodeBin} if something new happened
 addauth(ConnectionPId, Scheme, Auth) ->
-   gen_server:call(ConnectionPId, {addauth, Scheme, Auth},?SERVER_TIMEOUT).
+   gen_server:call(ConnectionPId, {addauth, Scheme, Auth}, ?SERVER_TIMEOUT).
 
 %% Creates a new ZK_Node
 %% Reply = Path where Path = String
 create(ConnectionPId, Path, Data) ->     
-    gen_server:call(ConnectionPId, {command, {create, Path, Data, [], [undef]}},?SERVER_TIMEOUT).
+    gen_server:call(ConnectionPId, {command, {create, Path, Data, [], [undef]}}, ?SERVER_TIMEOUT).
 n_create(ConnectionPId, Path, Data, Receiver, Tag) ->     
     gen_server:cast(ConnectionPId, {nbcommand, {create, Path, Data, [], [undef]}, 
 				    Receiver, Tag}).
@@ -197,12 +197,12 @@ n_get(ConnectionPId, Path, Receiver, Tag) ->
 %% with Type = child
 get(ConnectionPId, Path, WatchOwner, WatchMessage) ->     
     gen_server:call(ConnectionPId, {watchcommand, {get, getw, Path, {data, WatchOwner,
-								     WatchMessage}}},?SERVER_TIMEOUT).
+								     WatchMessage}}}, ?SERVER_TIMEOUT).
 
 %% Returns the actual Acls of a Node
 %% Reply = {[ACL],Parameters} with ACl and Parameters like above
 get_acl(ConnectionPId, Path) ->     
-    gen_server:call(ConnectionPId, {command, {get_acl, Path}},?SERVER_TIMEOUT).
+    gen_server:call(ConnectionPId, {command, {get_acl, Path}}, ?SERVER_TIMEOUT).
 n_get_acl(ConnectionPId, Path, Receiver, Tag) ->     
     gen_server:cast(ConnectionPId, {command, {get_acl, Path}, Receiver, Tag}).
 
@@ -210,7 +210,7 @@ n_get_acl(ConnectionPId, Path, Receiver, Tag) ->
 %% Dataformat is Binary.
 %% Reply = Parameters with Data like at get
 set(ConnectionPId, Path, Data) ->     
-    gen_server:call(ConnectionPId, {command, {set, Path, Data}},?SERVER_TIMEOUT).
+    gen_server:call(ConnectionPId, {command, {set, Path, Data}}, ?SERVER_TIMEOUT).
 n_set(ConnectionPId, Path, Data, Receiver, Tag) ->     
     gen_server:cast(ConnectionPId, {command, {set, Path, Data}, Receiver, Tag}).
 
@@ -218,14 +218,15 @@ n_set(ConnectionPId, Path, Data, Receiver, Tag) ->
 %% ACL like above.
 %% Reply = Parameters with Data like at get
 set_acl(ConnectionPId, Path, Acls) ->     
-    gen_server:call(ConnectionPId, {command, {set_acl, Path, Acls}},?SERVER_TIMEOUT).
+    gen_server:call(ConnectionPId, {command, {set_acl, Path, Acls}}, ?SERVER_TIMEOUT).
 n_set_acl(ConnectionPId, Path, Acls, Receiver, Tag) ->     
     gen_server:cast(ConnectionPId, {command, {set_acl, Path, Acls}, Receiver, Tag}).
 
 %% Lists all Children of a Node. Paths are given as Binarys!
 %% Reply = [ChildName] where ChildName = <<"Name">>
 ls(ConnectionPId, Path) ->     
-    gen_server:call(ConnectionPId, {command, {ls, Path}},?SERVER_TIMEOUT).
+    gen_server:call(ConnectionPId, {command, {ls, Path}}, ?SERVER_TIMEOUT).
+ 
 n_ls(ConnectionPId, Path, Receiver, Tag) ->     
     gen_server:cast(ConnectionPId, {nbcommand, {ls, Path}, Receiver, Tag}).
 %% like above, but a Childwatch is set to the Node. 
@@ -233,7 +234,7 @@ n_ls(ConnectionPId, Path, Receiver, Tag) ->
 ls(ConnectionPId, Path, WatchOwner, WatchMessage) ->
     ?LOG(3,"Connection: Send lsw"),     
     gen_server:call(ConnectionPId, {watchcommand, {ls, lsw, Path, {child, WatchOwner,
-								   WatchMessage}}},?SERVER_TIMEOUT).
+								   WatchMessage}}}, ?SERVER_TIMEOUT).
 
 %% Lists all Children of a Node. Paths are given as Binarys!
 %% Reply = {[ChildName],Parameters} with Parameters and ChildName like above.
@@ -247,12 +248,12 @@ n_ls2(ConnectionPId, Path, Receiver, Tag) ->
 %% Same Reaktion like at get with watch but Type = child
 ls2(ConnectionPId, Path, WatchOwner, WatchMessage) ->
     gen_server:call(ConnectionPId, {watchcommand, {ls2, ls2w,Path ,{child, WatchOwner,
-								    WatchMessage}}},?SERVER_TIMEOUT).
+								    WatchMessage}}}, ?SERVER_TIMEOUT).
 
 %% Returns the Actual Transaction Id of the Client.
 %% Reply = Iteration = Int.
 info_get_iterations(ConnectionPId) ->
-    gen_server:call(ConnectionPId, {info, get_iterations},?SERVER_TIMEOUT).
+    gen_server:call(ConnectionPId, {info, get_iterations}, ?SERVER_TIMEOUT).
 
 %% Gets a path and looks if the corresponding node exists. If
 %% not it is created (along with the whole path).
